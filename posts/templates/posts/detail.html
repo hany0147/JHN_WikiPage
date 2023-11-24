@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Detail</h1>
+  <h3><a href="{% url "posts:index" %}">뒤로가기</a></h3>
+  <p>{{ post.title }}</p>
+  <p>{{ post.created_at }}</p>
+  <p>{{ post.content }}</p>
+  <hr>
+  <h2>연관 게시글</h2>
+  {% if not related_posts %}
+    <p>연관 게시글이 없습니다.</p>
+  {% else %}
+    {% for related_post in related_posts %}
+    <li>
+      <a href="{% url "posts:detail" related_post.to_post.pk%}">{{ related_post.to_post.title }}</a>
+    </li>
+    {% endfor %}
+  {% endif %}
+
+
+  </form>
+</body>
+</html>
