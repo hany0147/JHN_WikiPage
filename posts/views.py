@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 from .models import Post, TotalWord, PostDetail, RelatedPost
 from .forms import PostForm
-from .utils import calculate_association, create_related_posts
+from .utils import create_related_posts
+from konlpy.tag import Okt
 from sklearn.feature_extraction.text import CountVectorizer
 import re
-from konlpy.tag import Okt
 import numpy as np
-from matplotlib import font_manager
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 import networkx as nx
 
 def index(request):
@@ -20,9 +20,6 @@ def index(request):
     return render(request, 'posts/index.html', context)
 
 def create(request):
-    '''
-    utils.py에 설명 기재함
-    '''
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -46,11 +43,10 @@ def create(request):
                     total_word.count += 1
                 total_word.save()
     
-                
                 post_detail = PostDetail(post=post, word=total_word, frequency=frequency)
                 post_detail.save()
 
-            # 연관게시글 생성
+            # 연관게시글 생성(./util.py)
             create_related_posts(post)
 
             return redirect('posts:detail', post.pk)
@@ -76,6 +72,8 @@ def detail(request, post_pk):
 matplotlib.use("Agg") # GUI 사용하지 않고 그래프 생성하기 위함
 
 def related_words(request):
+    MAX_FEATURES = 50
+    CORRELATION_THRESHOLD = 0.4 
 
     # 전체 게시글 호출 후 단어 전처리
     all_posts = Post.objects.all()
@@ -88,7 +86,7 @@ def related_words(request):
         fixed_total_contents.append(' '.join(nouns))
 
     # DTM 자료 생성(Document-Term Matrix: 문서(행)와 단어(열)간의 관계를 나타내는 매트릭스)
-    countervectorizer = CountVectorizer(max_features=50)
+    countervectorizer = CountVectorizer(max_features=MAX_FEATURES)
     dtm = countervectorizer.fit_transform(fixed_total_contents)
     dtm_dense = dtm.todense()
 
@@ -100,12 +98,14 @@ def related_words(request):
         for j in range(dtm_dense.shape[1]): # 단어의 개수: dtml_dense.shape[1]
             word_edges.append((words_name[i], words_name[j], word_corr[i, j]))
 
+    word_edges = sorted(word_edges, key=lambda x: x[2], reverse=True)
+
     # 연관 단어 튜플 생성
     related_words = []
     for word_edge in word_edges:
         if word_edge[0] == word_edge[1]:
             continue
-        if word_edge[2] >= 0.4: # 0.4 이상이면 중간정도의 상관관계(연관의 기준으로 삼음)
+        if word_edge[2] >= CORRELATION_THRESHOLD: # 0.4 이상이면 중간정도의 상관관계(연관의 기준으로 삼음)
             related_words.append((word_edge[0], word_edge[1]))
 
     # 단어*단어 행렬 만들기

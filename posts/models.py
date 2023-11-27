@@ -18,10 +18,9 @@ class PostDetail(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     word = models.ForeignKey(TotalWord, on_delete=models.CASCADE)
     frequency = models.IntegerField()
-    association = models.FloatField(null=True) # 삭제 요망?
 
 
 class RelatedPost(models.Model):
     from_post = models.ForeignKey(Post, related_name='from_related_posts', on_delete=models.CASCADE)
     to_post = models.ForeignKey(Post, related_name='to_related_posts',on_delete=models.CASCADE)
-    association = models.FloatField() # 빈도합이면 integerfield로 수정할 필요 있음
+    association = models.IntegerField()

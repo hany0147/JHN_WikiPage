@@ -1,5 +1,5 @@
-# JHN_WikiPage
-코딩허브 실무과제
+# JHN_WikiPage: 코딩허브 실무과제
+- 개발자: 장하늬
 
 ## 주요 기능
 - 게시글 목록 조회 (posts/)
@@ -16,10 +16,14 @@
 
 - 단어 전처리 및 계산
   - Konlpy 0.6.0(명사 위주 단어 분석 위함)
-    - JDK 1.7 이상 버전 설치 요함
+    - **JDK 1.7 이상 버전 설치 요함**
   - scikit-learn==1.3.2
 
 - 연관단어 네트워크
   - matplotlib==3.8.2
   - networkx==3.2.1
   - numpy==1.26.2
+
+## 더미 데이터
+- .gitignore에서 db.sqlite3를 제외하였으므로, 필요시 활용가능.
+- 불필요하다면 sqlite3 삭제 후 migrate하기 바람
