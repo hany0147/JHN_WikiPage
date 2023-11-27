@@ -8,9 +8,9 @@
 <body>
   <h1>Detail</h1>
   <h3><a href="{% url "posts:index" %}">뒤로가기</a></h3>
-  <p>{{ post.title }}</p>
-  <p>{{ post.created_at }}</p>
-  <p>{{ post.content }}</p>
+  <p>제목: {{ post.title }}</p>
+  <p>작성시간: {{ post.created_at }}</p>
+  <p>내용: {{ post.content }}</p>
   <hr>
   <h2>연관 게시글</h2>
   {% if not related_posts %}

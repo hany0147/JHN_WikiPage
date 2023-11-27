@@ -8,7 +8,9 @@
 <body>
   <h1>Index</h1>
   <h3><a href="{% url "posts:create" %}">생성하기</a></h3>
+  <h3><a href="{% url "posts:related_words" %}">연관지도 확인하기</a></h3>
   {% for post in posts %}
+    <p>{{ post.pk }}</p>
     <a href="{% url "posts:detail" post.pk %}">{{ post.title }}</a>
     <p>{{ post.created_at }}</p>
     <hr>
