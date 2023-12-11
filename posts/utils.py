@@ -29,7 +29,7 @@ def create_related_posts(post):
     '''
     total_posts_count = Post.objects.count()
     EXCLUSION_THRESHOLD = total_posts_count * 0.6
-    excluded = TotalWord.objects.filter(count__gte=EXCLUSION_THRESHOLD.values_list('word', flat=True))
+    excluded = TotalWord.objects.filter(count__gte=EXCLUSION_THRESHOLD).values_list('word', flat=True)
     base_words = PostDetail.objects.filter(post=post).exclude(word__in=excluded).values_list('word__word', flat=True)
 
     if not base_words:
